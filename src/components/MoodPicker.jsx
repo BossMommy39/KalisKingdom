@@ -1,19 +1,20 @@
-export default function MoodPicker({ moods, activeMood, onChangeMood, moodEmoji }) {
+import { MOODS } from '../data/kingdom';
+
+// How is Kali feeling today? Picking a mood re-themes Twix and the quest doors.
+export default function MoodPicker({ activeMood, onChangeMood }) {
   return (
-    <section className="kk-card stagger-in" style={{ paddingBottom: 12 }}>
-      <p className="kk-moods__label">Pick your mood</p>
-      <div className="kk-moods">
-        {moods.map(mood => (
-          <button
-            key={mood}
-            type="button"
-            className={`kk-btn kk-btn--mood ${mood === activeMood ? 'active' : ''}`}
-            onClick={() => onChangeMood(mood)}
-          >
-            {moodEmoji[mood]} {mood}
-          </button>
-        ))}
-      </div>
-    </section>
+    <div className="mood-grid">
+      {MOODS.map(m => (
+        <button
+          key={m.key}
+          className={`mood-chip ${activeMood === m.key ? 'active' : ''}`}
+          style={{ '--c': m.color }}
+          onClick={() => onChangeMood(activeMood === m.key ? null : m.key)}
+        >
+          <div className="m-name">{m.label}</div>
+          <div className="m-blurb">{m.blurb}</div>
+        </button>
+      ))}
+    </div>
   );
 }

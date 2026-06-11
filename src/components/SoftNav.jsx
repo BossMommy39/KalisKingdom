@@ -1,21 +1,22 @@
-export default function SoftNav({ active, onNavigate, galleryCount }) {
-  const items = [
-    { id: 'today', icon: '🏠', label: 'Today' },
-    { id: 'gallery', icon: '🖼️', label: `Gallery${galleryCount > 0 ? ` (${galleryCount})` : ''}` },
-    { id: 'mommy', icon: '👑', label: 'Mommy' },
-  ];
+const ITEMS = [
+  { key: 'home',    label: 'Home',    ico: '🏠' },
+  { key: 'worlds',  label: 'Worlds',  ico: '🏰' },
+  { key: 'quests',  label: 'Quests',  ico: '✨' },
+  { key: 'gallery', label: 'Gallery', ico: '🖼️' },
+  { key: 'mommy',   label: 'Mommy',   ico: '💗' },
+];
 
+export default function SoftNav({ active, onNavigate }) {
   return (
-    <nav className="kk-nav">
-      {items.map(item => (
+    <nav className="softnav">
+      {ITEMS.map(it => (
         <button
-          key={item.id}
-          className={`kk-nav__item ${active === item.id ? 'active' : ''}`}
-          onClick={() => onNavigate(item.id)}
-          type="button"
+          key={it.key}
+          className={`nav-item ${active === it.key ? 'active' : ''}`}
+          onClick={() => onNavigate(it.key)}
         >
-          <span className="kk-nav__icon">{item.icon}</span>
-          {item.label}
+          <span className="ni-ico">{it.ico}</span>
+          {it.label}
         </button>
       ))}
     </nav>

@@ -1,90 +1,84 @@
-import { useState } from 'react';
+import { twixImg, worldArtKey, messColor } from '../data/kingdom';
 
-export default function QuestModal({ activity, onClose, onComplete, accentColor }) {
-  const [selectedTier, setSelectedTier] = useState(null);
+const TIER_COLORS = { quick: '#7FD1B9', stretch: '#F6A06A', boss: '#B69CE6' };
 
-  const tiers = [
-    { key: 'quick', label: '⚡ Quick Win', desc: activity.quick },
-    { key: 'stretch', label: '🔥 Bigger Build', desc: activity.stretch },
-    { key: 'boss', label: '👑 Boss Quest', desc: activity.boss },
-  ];
+// Full quest detail. Watch button + tiered missions + story bible + mark complete.
+export default function QuestModal({ activity, onClose, onComplete }) {
+  if (!activity) return null;
+  const mc = messColor[activity.mess] || messColor.Green;
+
+  const safety = (activity.safety && activity.safety !== 'None')
+    ? activity.safety.split(',').map(s => s.trim()).filter(Boolean)
+    : [];
 
   return (
-    <div className="kk-quest-overlay" onClick={onClose}>
-      <article className="kk-quest" onClick={e => e.stopPropagation()}>
-        <button className="kk-quest__close" onClick={onClose} type="button">×</button>
+    <div className="scrim" onClick={onClose}>
+      <div className="sheet" onClick={(e) => e.stopPropagation()}>
+        <div className="grab" />
 
-        <p className="kk-quest__world">{activity.world}</p>
-        <h2 className="kk-quest__title">{activity.name}</h2>
-
-        <div
-          className="kk-quest__story-box"
-          style={{ background: `${accentColor}20`, border: `2px solid ${accentColor}30` }}
-        >
-          <p className="kk-quest__story-label">📖 Story Card</p>
-          <p className="kk-quest__story-text">{activity.storyPrompt}</p>
-          <p className="kk-quest__story-text">
-            <strong>Your role:</strong> {activity.role}
-          </p>
-          <p className="kk-quest__story-text">
-            <strong>Mission:</strong> {activity.mission}
-          </p>
-          <p className="kk-quest__story-text" style={{ color: 'var(--ink-faint)' }}>
-            <strong>Plot twist:</strong> {activity.plotTwist}
-          </p>
+        <div className="sheet-hero">
+          <div className="sh-thumb"><img src={twixImg(worldArtKey(activity.world))} alt="" /></div>
+          <div>
+            <div className="sh-cat">{activity.category}</div>
+            <h2>{activity.name}</h2>
+            <div className="sh-world">🏰 {activity.world}</div>
+          </div>
         </div>
 
-        <p className="kk-quest__story-label" style={{ margin: '0 0 8px' }}>Pick your quest tier:</p>
-        <div className="kk-quest__tiers">
-          {tiers.map(tier => (
-            <div
-              key={tier.key}
-              className={`kk-quest__tier ${selectedTier === tier.key ? 'selected' : ''}`}
-              onClick={() => setSelectedTier(tier.key)}
-            >
-              <p className="kk-quest__tier-label">{tier.label}</p>
-              <p className="kk-quest__tier-desc">{tier.desc}</p>
-            </div>
-          ))}
+        <div className="twix-bar">
+          <img src={twixImg('peek')} alt="Twix" />
+          <span>“{activity.twixSays}”</span>
         </div>
 
-        <div className="kk-quest__protip">
-          <p className="kk-quest__protip-label">🐾 Pro Tip</p>
-          <p className="kk-quest__protip-text">{activity.proTip}</p>
+        <div className="tiers">
+          <div className="tier" style={{ '--c': TIER_COLORS.quick }}>
+            <div className="t-label">⚡ Quick Win</div>
+            <div className="t-text">{activity.quick}</div>
+          </div>
+          <div className="tier" style={{ '--c': TIER_COLORS.stretch }}>
+            <div className="t-label">🌱 Stretch</div>
+            <div className="t-text">{activity.stretch}</div>
+          </div>
+          <div className="tier" style={{ '--c': TIER_COLORS.boss }}>
+            <div className="t-label">👑 Boss Quest</div>
+            <div className="t-text">{activity.boss}</div>
+          </div>
         </div>
 
-        <p className="kk-quest__twix">&ldquo;{activity.twixSays}&rdquo;</p>
+        <div className="protip">💡 <b>Pro tip:</b> {activity.proTip}</div>
 
-        <div style={{ fontSize: '0.82rem', color: 'var(--ink-light)', margin: '8px 0' }}>
-          <strong>Supplies:</strong> {activity.supplies}
-          {activity.safety !== 'None' && (
-            <span style={{ marginLeft: 8, color: '#c44' }}>⚠️ {activity.safety}</span>
-          )}
+        <div className="story-block">
+          <div className="sb-row"><div className="sb-k">The story</div><div className="sb-v">{activity.storyPrompt}</div></div>
+          <div className="sb-row"><div className="sb-k">Your role</div><div className="sb-v">{activity.role}</div></div>
+          <div className="sb-row"><div className="sb-k">Mission</div><div className="sb-v">{activity.mission}</div></div>
+          <div className="sb-row"><div className="sb-k">Plot twist</div><div className="sb-v">{activity.plotTwist}</div></div>
+          <div className="sb-row"><div className="sb-k">Boss level</div><div className="sb-v">{activity.bossLevel}</div></div>
         </div>
 
-        <div className="kk-quest__actions">
-          {activity.videoUrl && (
-            <a
-              href={activity.videoUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="kk-btn kk-btn--secondary"
-              style={{ textDecoration: 'none', textAlign: 'center' }}
-            >
-              📺 Watch
-            </a>
-          )}
-          <button
-            className="kk-btn kk-btn--primary"
-            onClick={() => selectedTier && onComplete(activity, selectedTier)}
-            disabled={!selectedTier}
-            type="button"
-            style={{ opacity: selectedTier ? 1 : 0.5 }}
-          >
-            ✅ Mark Complete
+        <div className="info-grid">
+          <div className="info"><div className="i-k">Supplies</div><div className="i-v">{activity.supplies}</div></div>
+          <div className="info"><div className="i-k">Where</div><div className="i-v">{activity.location}</div></div>
+          <div className="info"><div className="i-k">Setup</div><div className="i-v">{activity.setup}</div></div>
+          <div className="info"><div className="i-k">Cleanup</div><div className="i-v">{activity.cleanup}</div></div>
+          <div className="info"><div className="i-k">Grown-up</div><div className="i-v">{activity.adultHelp}</div></div>
+          <div className="info"><div className="i-k">Mess level</div><div className="i-v" style={{ color: mc.fg }}>● {activity.mess}</div></div>
+        </div>
+
+        <div className="safety-row">
+          {safety.length
+            ? safety.map((s, i) => <span key={i} className="safety-flag">⚠ {s}</span>)
+            : <span className="safety-flag ok">✓ No special safety</span>}
+        </div>
+
+        <div className="sheet-cta">
+          <a className="cta-big cta-watch" href={activity.videoUrl} target="_blank" rel="noopener noreferrer">
+            ▶ {activity.videoLabel || 'Watch tutorial'}
+          </a>
+          <button className="cta-big cta-done" onClick={() => onComplete(activity)}>
+            ✓ Mark complete
           </button>
         </div>
-      </article>
+      </div>
     </div>
   );
 }
