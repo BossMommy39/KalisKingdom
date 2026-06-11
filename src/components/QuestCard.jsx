@@ -1,14 +1,13 @@
 import { twixImg, worldArtKey, messColor } from '../data/kingdom';
+import Icon from './Icon';
 
-// A single quest in a list/grid. Always shows the YouTube "Watch" link.
+// A single quest in a grid. Always shows the YouTube "Watch" link.
 export default function QuestCard({ activity, onOpen }) {
   const mc = messColor[activity.mess] || messColor.Green;
   return (
     <article className="qcard">
       <div className="qcard-top">
-        <div className="qcard-thumb">
-          <img src={twixImg(worldArtKey(activity.world))} alt="" />
-        </div>
+        <div className="qcard-thumb"><img src={twixImg(worldArtKey(activity.world))} alt="" /></div>
         <div>
           <div className="qc-cat">{activity.category}</div>
           <div className="qc-name">{activity.name}</div>
@@ -30,8 +29,10 @@ export default function QuestCard({ activity, onOpen }) {
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
-          >▶ Watch</a>
-          <button className="btn btn-open" onClick={() => onOpen(activity)}>Open quest</button>
+          ><Icon name="play" size={16} /> Watch</a>
+          <button className="btn btn-open" onClick={() => onOpen(activity)}>
+            <Icon name="sparkles" size={16} /> Open
+          </button>
         </div>
       </div>
     </article>

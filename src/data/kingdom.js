@@ -11,14 +11,14 @@ export function twixImg(key) {
 
 // The eight child-facing moods used across activities.
 export const MOODS = [
-  { key: 'Business Boss',   label: 'Business Boss',   blurb: 'Tiny CEO energy',        twix: 'royal',  color: '#F6A06A' },
-  { key: 'Sparkly',         label: 'Sparkly',         blurb: 'Make it shimmer',        twix: 'dreamy', color: '#E59ACB' },
-  { key: 'Cozy',            label: 'Cozy',            blurb: 'Soft + slow',            twix: 'crown',  color: '#F4A9B8' },
-  { key: 'Builder',         label: 'Builder',         blurb: 'Hands need a job',       twix: 'maker',  color: '#7FD1B9' },
-  { key: 'Tech Sorceress',  label: 'Tech Sorceress',  blurb: 'Screen time = power',    twix: 'maker',  color: '#B69CE6' },
-  { key: 'Science',         label: 'Science',         blurb: 'Test a theory',          twix: 'cloud',  color: '#86C7E8' },
-  { key: 'Puppy/Twix',      label: 'Puppy / Twix',    blurb: 'For the puppy council',  twix: 'meadow', color: '#F7B27A' },
-  { key: 'Heist Crew',      label: 'Heist Crew',      blurb: 'Allegedly nothing',      twix: 'peek',   color: '#C9B7E8' },
+  { key: 'Business Boss',   label: 'Business Boss',   blurb: 'Tiny CEO energy',        twix: 'royal',  color: '#2FBFD4' },
+  { key: 'Sparkly',         label: 'Sparkly',         blurb: 'Make it shimmer',        twix: 'dreamy', color: '#EF82B6' },
+  { key: 'Cozy',            label: 'Cozy',            blurb: 'Soft + slow',            twix: 'crown',  color: '#FF9E8C' },
+  { key: 'Builder',         label: 'Builder',         blurb: 'Hands need a job',       twix: 'maker',  color: '#54CBA7' },
+  { key: 'Tech Sorceress',  label: 'Tech Sorceress',  blurb: 'Screen time = power',    twix: 'maker',  color: '#A98CE6' },
+  { key: 'Science',         label: 'Science',         blurb: 'Test a theory',          twix: 'cloud',  color: '#1B9BB0' },
+  { key: 'Puppy/Twix',      label: 'Puppy / Twix',    blurb: 'For the puppy council',  twix: 'meadow', color: '#FFC247' },
+  { key: 'Heist Crew',      label: 'Heist Crew',      blurb: 'Allegedly nothing',      twix: 'peek',   color: '#C8B6F2' },
 ];
 
 export const moodByKey = Object.fromEntries(MOODS.map(m => [m.key, m]));
@@ -98,4 +98,13 @@ export function activityById(id) {
 
 export function drawRandom(pool = activities) {
   return pool[Math.floor(Math.random() * pool.length)];
+}
+
+// Narrative beats attached to a world (no invented content — straight from appData).
+export function themeWeekFor(worldName) {
+  return themeWeeks.find(t => t.world === worldName) || null;
+}
+
+export function storyCardsFor(worldName) {
+  return storyCards.filter(s => s.world === worldName);
 }

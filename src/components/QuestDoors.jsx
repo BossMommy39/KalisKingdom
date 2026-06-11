@@ -15,7 +15,7 @@ function Door({ activity, onOpen }) {
     <button className={`door ${open ? 'open' : ''}`} onClick={handle} aria-label={`Quest door: ${activity.name}`}>
       <div className="door-inner">
         <div className="door-front">
-          <div className="door-label">🚪 {activity.world}</div>
+          <div className="door-label">{activity.world}</div>
           <div className="door-emoji"><img src={twixImg(worldArtKey(activity.world))} alt="" /></div>
           <div className="door-cta">Tap to open</div>
           <span className="knob" />
@@ -24,8 +24,8 @@ function Door({ activity, onOpen }) {
       <div className="door-reveal">
         <div className="dr-world">{activity.category}</div>
         <div className="dr-name">{activity.name}</div>
-        <div className="dr-quick">⚡ {activity.quick}</div>
-        <div className="dr-go"><span className="btn btn-open">Start quest →</span></div>
+        <div className="dr-quick">{activity.quick}</div>
+        <div className="dr-go"><span className="btn-mini">Start quest →</span></div>
       </div>
     </button>
   );

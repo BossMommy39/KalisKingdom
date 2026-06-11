@@ -1,9 +1,10 @@
+import Icon from './Icon';
+
 const ITEMS = [
-  { key: 'home',    label: 'Home',    ico: '🏠' },
-  { key: 'worlds',  label: 'Worlds',  ico: '🏰' },
-  { key: 'quests',  label: 'Quests',  ico: '✨' },
-  { key: 'gallery', label: 'Gallery', ico: '🖼️' },
-  { key: 'mommy',   label: 'Mommy',   ico: '💗' },
+  { key: 'map',     label: 'Map',     icon: 'map' },
+  { key: 'quests',  label: 'Quests',  icon: 'sparkles' },
+  { key: 'gallery', label: 'Gallery', icon: 'gallery' },
+  { key: 'mommy',   label: 'Parent',  icon: 'heart' },
 ];
 
 export default function SoftNav({ active, onNavigate }) {
@@ -15,7 +16,7 @@ export default function SoftNav({ active, onNavigate }) {
           className={`nav-item ${active === it.key ? 'active' : ''}`}
           onClick={() => onNavigate(it.key)}
         >
-          <span className="ni-ico">{it.ico}</span>
+          <Icon name={it.icon} size={22} />
           {it.label}
         </button>
       ))}

@@ -1,12 +1,19 @@
+import { useState } from 'react';
 import { twixImg, worldArtKey, messColor } from '../data/kingdom';
+import Icon from './Icon';
 
-const TIER_COLORS = { quick: '#7FD1B9', stretch: '#F6A06A', boss: '#B69CE6' };
+const TIERS = [
+  { key: 'quick',   label: 'Quick Win',  color: '#54CBA7', field: 'quick' },
+  { key: 'stretch', label: 'Stretch',    color: '#2FBFD4', field: 'stretch' },
+  { key: 'boss',    label: 'Boss Quest', color: '#EF82B6', field: 'boss' },
+];
 
-// Full quest detail. Watch button + tiered missions + story bible + mark complete.
+// Full quest as a story arc: the call → role → mission → twist → boss climax → reward.
+// Kid picks which tier of the path she completed, then marks it done.
 export default function QuestModal({ activity, onClose, onComplete }) {
+  const [tier, setTier] = useState('quick');
   if (!activity) return null;
   const mc = messColor[activity.mess] || messColor.Green;
-
   const safety = (activity.safety && activity.safety !== 'None')
     ? activity.safety.split(',').map(s => s.trim()).filter(Boolean)
     : [];
@@ -21,7 +28,7 @@ export default function QuestModal({ activity, onClose, onComplete }) {
           <div>
             <div className="sh-cat">{activity.category}</div>
             <h2>{activity.name}</h2>
-            <div className="sh-world">🏰 {activity.world}</div>
+            <div className="sh-world">{activity.world}</div>
           </div>
         </div>
 
@@ -30,30 +37,33 @@ export default function QuestModal({ activity, onClose, onComplete }) {
           <span>“{activity.twixSays}”</span>
         </div>
 
+        <div className="arc">
+          <div className="arc-step"><div className="as-k">The story</div><div className="as-v">{activity.storyPrompt}</div></div>
+          <div className="arc-step"><div className="as-k">Your role</div><div className="as-v">{activity.role}</div></div>
+          <div className="arc-step"><div className="as-k">Your mission</div><div className="as-v">{activity.mission}</div></div>
+          <div className="arc-step"><div className="as-k">Plot twist</div><div className="as-v">{activity.plotTwist}</div></div>
+          <div className="arc-step climax"><div className="as-k">Boss level</div><div className="as-v">{activity.bossLevel}</div></div>
+        </div>
+
+        <div className="path-head">Pick your path</div>
         <div className="tiers">
-          <div className="tier" style={{ '--c': TIER_COLORS.quick }}>
-            <div className="t-label">⚡ Quick Win</div>
-            <div className="t-text">{activity.quick}</div>
-          </div>
-          <div className="tier" style={{ '--c': TIER_COLORS.stretch }}>
-            <div className="t-label">🌱 Stretch</div>
-            <div className="t-text">{activity.stretch}</div>
-          </div>
-          <div className="tier" style={{ '--c': TIER_COLORS.boss }}>
-            <div className="t-label">👑 Boss Quest</div>
-            <div className="t-text">{activity.boss}</div>
-          </div>
+          {TIERS.map(t => (
+            <button
+              key={t.key}
+              className={`tier ${tier === t.key ? 'sel' : ''}`}
+              style={{ '--c': t.color }}
+              onClick={() => setTier(t.key)}
+            >
+              <span className="t-pick">{tier === t.key ? <Icon name="check" size={16} /> : ''}</span>
+              <span>
+                <span className="t-label">{t.label}</span>
+                <span className="t-text">{activity[t.field]}</span>
+              </span>
+            </button>
+          ))}
         </div>
 
         <div className="protip">💡 <b>Pro tip:</b> {activity.proTip}</div>
-
-        <div className="story-block">
-          <div className="sb-row"><div className="sb-k">The story</div><div className="sb-v">{activity.storyPrompt}</div></div>
-          <div className="sb-row"><div className="sb-k">Your role</div><div className="sb-v">{activity.role}</div></div>
-          <div className="sb-row"><div className="sb-k">Mission</div><div className="sb-v">{activity.mission}</div></div>
-          <div className="sb-row"><div className="sb-k">Plot twist</div><div className="sb-v">{activity.plotTwist}</div></div>
-          <div className="sb-row"><div className="sb-k">Boss level</div><div className="sb-v">{activity.bossLevel}</div></div>
-        </div>
 
         <div className="info-grid">
           <div className="info"><div className="i-k">Supplies</div><div className="i-v">{activity.supplies}</div></div>
@@ -61,21 +71,21 @@ export default function QuestModal({ activity, onClose, onComplete }) {
           <div className="info"><div className="i-k">Setup</div><div className="i-v">{activity.setup}</div></div>
           <div className="info"><div className="i-k">Cleanup</div><div className="i-v">{activity.cleanup}</div></div>
           <div className="info"><div className="i-k">Grown-up</div><div className="i-v">{activity.adultHelp}</div></div>
-          <div className="info"><div className="i-k">Mess level</div><div className="i-v" style={{ color: mc.fg }}>● {activity.mess}</div></div>
+          <div className="info"><div className="i-k">Mess level</div><div className="i-v" style={{ color: mc.fg }}>● {mc.label}</div></div>
         </div>
 
         <div className="safety-row">
           {safety.length
-            ? safety.map((s, i) => <span key={i} className="safety-flag">⚠ {s}</span>)
-            : <span className="safety-flag ok">✓ No special safety</span>}
+            ? safety.map((s, i) => <span key={i} className="safety-flag"><Icon name="flag" size={13} /> {s}</span>)
+            : <span className="safety-flag ok"><Icon name="check" size={13} /> No special safety</span>}
         </div>
 
         <div className="sheet-cta">
           <a className="cta-big cta-watch" href={activity.videoUrl} target="_blank" rel="noopener noreferrer">
-            ▶ {activity.videoLabel || 'Watch tutorial'}
+            <Icon name="play" size={18} /> Watch
           </a>
-          <button className="cta-big cta-done" onClick={() => onComplete(activity)}>
-            ✓ Mark complete
+          <button className="cta-big cta-done" onClick={() => onComplete(activity, tier)}>
+            <Icon name="check" size={18} /> Mark complete
           </button>
         </div>
       </div>
